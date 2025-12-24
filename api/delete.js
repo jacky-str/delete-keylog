@@ -2,25 +2,19 @@ import axios from 'axios'
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res.status(405).send('Method not allowed')
+    return res.status(405).send('[ERROR] Method tidak diizinkan')
   }
 
-  const { webhook, secret } = req.body
+  const { webhook } = req.body
 
-  // 🔒 Pengaman
-  if (secret !== process.env.SECRET_KEY) {
-    return res.status(401).send('❌ Secret key salah')
-  }
-
-  // 🔍 Validasi webhook Discord
-  if (!webhook?.startsWith('https://discord.com/api/webhooks/')) {
-    return res.status(400).send('❌ Webhook tidak valid')
+  if (!webhook || !webhook.startsWith('https://discord.com/api/webhooks/')) {
+    return res.status(400).send('[ERROR] Webhook tidak valid')
   }
 
   try {
     await axios.delete(webhook)
-    res.send('✅ Webhook berhasil dihapus')
-  } catch {
-    res.status(500).send('❌ Gagal menghapus webhook')
+    res.send('[SUCCESS] Webhook berhasil dihapus')
+  } catch (err) {
+    res.status(500).send('[ERROR] Gagal menghapus webhook')
   }
 }

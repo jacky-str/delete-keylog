@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Webhook Deleter</title>
+</head>
+<body>
+
+<h2>Webhook Deleter (Private)</h2>
+
+<form id="form">
+  <input
+    type="text"
+    id="webhook"
+    placeholder="https://discord.com/api/webhooks/..."
+    required
+    style="width: 100%; padding: 8px;"
+  >
+  <br><br>
+  <input
+    type="password"
+    id="secret"
+    placeholder="Secret Key"
+    required
+    style="width: 100%; padding: 8px;"
+  >
+  <br><br>
+  <button type="submit">Hapus Webhook</button>
+</form>
+
+<p id="result"></p>
+
+<script>
+document.getElementById('form').addEventListener('submit', async (e) => {
+  e.preventDefault()
+
+  const webhook = document.getElementById('webhook').value
+  const secret = document.getElementById('secret').value
+
+  const res = await fetch('/api/delete', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ webhook, secret })
+  })
+
+  document.getElementById('result').innerText = await res.text()
+})
+</script>
+
+</body>
+</html>

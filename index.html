@@ -3,48 +3,109 @@
 <head>
   <meta charset="UTF-8">
   <title>Webhook Deleter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body{
+      margin:0;
+      min-height:100vh;
+      background:linear-gradient(180deg,#0b1020,#050814);
+      font-family:Arial,sans-serif;
+      color:#fff;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+    .container{max-width:420px;width:100%;padding:20px}
+    h1{text-align:center;color:#a855f7;margin-bottom:25px}
+    .card{background:#0f172a;border-radius:12px;padding:20px}
+    .btn-group{display:flex;gap:10px;margin-bottom:15px}
+    .btn{flex:1;padding:12px;border-radius:10px;border:none;font-weight:bold}
+    .btn-spam{background:#111827;color:#9ca3af}
+    .btn-delete{background:#7c3aed;color:#fff}
+    label{font-size:14px;color:#c7d2fe}
+    input{
+      width:100%;
+      padding:12px;
+      margin-top:6px;
+      border-radius:10px;
+      border:1px solid #1e293b;
+      background:#020617;
+      color:#fff;
+    }
+    .btn-check{
+      margin-top:12px;
+      width:100%;
+      padding:12px;
+      border-radius:10px;
+      border:none;
+      background:#7c3aed;
+      color:#fff;
+      font-weight:bold;
+    }
+    .info{
+      margin-top:12px;
+      background:#020617;
+      padding:10px;
+      border-radius:10px;
+      font-size:13px;
+      color:#cbd5f5;
+    }
+    .log{
+      margin-top:15px;
+      background:#020617;
+      padding:15px;
+      border-radius:12px;
+      font-family:monospace;
+      color:#60a5fa;
+      min-height:120px;
+    }
+  </style>
 </head>
 <body>
 
-<h2>Webhook Deleter (Private)</h2>
+<div class="container">
+  <h1>BANTAI KEYLOGGER<br>BIAR MUSNAH</h1>
 
-<form id="form">
-  <input
-    type="text"
-    id="webhook"
-    placeholder="https://discord.com/api/webhooks/..."
-    required
-    style="width: 100%; padding: 8px;"
-  >
-  <br><br>
-  <input
-    type="password"
-    id="secret"
-    placeholder="Secret Key"
-    required
-    style="width: 100%; padding: 8px;"
-  >
-  <br><br>
-  <button type="submit">Hapus Webhook</button>
-</form>
+  <div class="card">
+    <div class="btn-group">
+      <button class="btn btn-spam" type="button">✈ Spam Pesan</button>
+      <button class="btn btn-delete" type="button" onclick="deleteWebhook()">🗑 Hapus Webhook</button>
+    </div>
 
-<p id="result"></p>
+    <label>Webhook URL</label>
+    <input id="webhook" placeholder="https://discord.com/api/webhooks/..." />
+
+    <button class="btn-check" onclick="deleteWebhook()">✔ Check</button>
+
+    <div class="info">
+      ℹ Masukan URL Webhook dan tekan tombol Check
+    </div>
+  </div>
+
+  <div class="log" id="log">
+    [INFO] BANTAI KEYLOGGER BIAR MUSNAH Tools Ready
+  </div>
+</div>
 
 <script>
-document.getElementById('form').addEventListener('submit', async (e) => {
-  e.preventDefault()
-
+async function deleteWebhook(){
   const webhook = document.getElementById('webhook').value
-  const secret = document.getElementById('secret').value
+  const log = document.getElementById('log')
+
+  if(!webhook){
+    log.innerText += '\n[ERROR] Webhook kosong'
+    return
+  }
 
   const res = await fetch('/api/delete', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ webhook, secret })
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({ webhook })
   })
 
-  document.getElementById('result').innerText = await res.text()
-})
+  const text = await res.text()
+  log.innerText += '\n' + text
+}
 </script>
 
 </body>
